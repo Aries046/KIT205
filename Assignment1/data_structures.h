@@ -2,14 +2,14 @@
 #define DATA_STRUCTURES_H
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 typedef struct book {
     int book_id;
-    char title[256];
+    char title[100];
     char author[100];
-    struct book *next;
+    struct Book *left;
+    struct Book *right;
 } Book;
 
 typedef struct borrower {
