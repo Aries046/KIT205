@@ -52,15 +52,20 @@ Borrower* find_borrower(Library *lib, int borrower_id) {
     return NULL;
 }
 
-void print_library(Library *lib) {
-    Book *current_book = lib->books;
-    printf("Books:\n");
-    while (current_book) {
-        printf("ID: %d, Title: %s, Author: %s\n", current_book->book_id, current_book->title, current_book->author);
-        current_book = current_book->next;
+void print_books(Book *root) {
+    if (root != NULL) {
+        print_books(root->left);
+        printf("ID: %d, Title: %s, Author: %s\n", root->book_id, root->title, root->author);
+        print_books(root->right);
     }
-    Borrower *current_borrower = lib->borrowers;
+}
+
+void print_library(Library *lib) {
+    printf("Books:\n");
+    print_books(lib->books);
+
     printf("Borrowers:\n");
+    Borrower *current_borrower = lib->borrowers;
     while (current_borrower) {
         printf("ID: %d, Name: %s\n", current_borrower->borrower_id, current_borrower->name);
         current_borrower = current_borrower->next;
