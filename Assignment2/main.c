@@ -485,4 +485,12 @@ void Floyed() {
     system("pause");
 }
 
+void changecode() {
+    char newcode[20];
+    printf("Please enter the new password you want to set: \n");
+    scanf("%s", newcode);
+    strcpy(PASSCODE, newcode);
+    printf("Password changed successfully! Please remember your new password!\n");
+    printf("*Note* The new password will revert to the initial default password the next time you enter the program.");
+}
 
