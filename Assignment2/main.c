@@ -123,9 +123,135 @@ void introduce() {
         introduce();
     }
 }
+void addspot() {
+    createspot();
+    if (map.v >= MAX_PEAKS) {
+        printf("The maximum number of scenic spots has been reached, unable to add more!\n");
+        return;
+    }
+    char newName[200];
+    char newFeatures[1000];
+    printf("Please enter the name of the new scenic spot:\n");
+    scanf("%s", newName);
+    getchar();
+    printf("Please enter the description for the scenic spot \"%s\" (up to 200 characters):\n", newName);
+    scanf("%s", newFeatures);
+    getchar();
+    int m = 0;
+    Listspot();
+    printf("Please enter the number of adjacent scenic spots:\n");
+    scanf("%d", &m);
+    while (m < 0 || m > map.v) {
+        printf("Invalid input, please re-enter!\n");
+        scanf("%d", &m);
+    }
+    for (int i = 0; i < m; i++) {
+        int a, d;
+        printf("Please enter the code of the %d adjacent scenic spot:\n", i + 1);
+        scanf("%d", &a);
+        while (a < 1 || a > map.v) {
+            printf("Invalid input, please re-enter! Range is 1 to %d.\n", map.v);
+            scanf("%d", &a);
+        }
+        printf("Please enter the distance between \"%s\" and \"%s\":\n", newName, map.pk[a - 1].name);
+        scanf("%d", &d);
+        while (d <= 0 || d >= BIG) {
+            printf("Invalid distance, please re-enter!\n");
+            scanf("%d", &d);
+        }
+        Edge *newEdge = (Edge *)malloc(sizeof(Edge));
+        newEdge->dest = a - 1;
+        newEdge->weight = d;
+        newEdge->next = map.pk[map.v].adjList;
+        map.pk[map.v].adjList = newEdge;
 
+        Edge *reverseEdge = (Edge *)malloc(sizeof(Edge));
+        reverseEdge->dest = map.v;
+        reverseEdge->weight = d;
+        reverseEdge->next = map.pk[a - 1].adjList;
+        map.pk[a - 1].adjList = reverseEdge;
+    }
+    strcpy(map.pk[map.v].name, newName);
+    strcpy(map.pk[map.v].features, newFeatures);
+    map.v++;
+    map.e += m;
+    printf("Scenic spot added successfully!\n");
+}
 
+void changes() {
+    createspot();
+    Listspot();
+    int name;
+    char outputname[200], inputfeatures[200];
+    printf("Please enter the code of the scenic spot you want to modify (enter 0 to return to the main menu):\n");
+    scanf("%d", &name);
+    if (name == 0) return;
+    while (name < 1 || name > map.v) {
+        printf("Invalid scenic spot code, please re-enter:\n");
+        scanf("%d", &name);
+    }
+    printf("The current name of this scenic spot is:\n%s\n", map.pk[name - 1].name);
+    printf("Please enter the new name:\n");
+    scanf("%s", outputname);
+    strcpy(map.pk[name - 1].name, outputname);
+    printf("Name updated successfully\n");
+    printf("The current information of this scenic spot is:\n%s\n", map.pk[name - 1].features);
+    printf("Please enter the new description of the scenic spot:\n");
+    scanf("%s", inputfeatures);
+    strcpy(map.pk[name - 1].features, inputfeatures);
+    printf("Scenic spot description updated successfully. Enter 1 to continue modifying, or enter 2 to return to the main menu\n");
+    int p;
+    scanf("%d", &p);
+    if (p == 2) return;
+    if (p == 1) changes();
+}
 
-void menu2() {
-    // Placeholder for tourist menu
+void deletespot() {
+    createspot();
+    if (map.v < 1) {
+        printf("There are no scenic spots on the map, unable to delete!\n");
+        return;
+    }
+    Listspot();
+    printf("Please enter the code of the scenic spot you want to delete (must be a number):\n");
+    int a;
+    scanf("%d", &a);
+    while (a < 1 || a > map.v) {
+        printf("Invalid input, please re-enter! Range is 1 to %d.\n", map.v);
+        scanf("%d", &a);
+    }
+    printf("You are about to delete the scenic spot: \"%s\"\nPress 1 to confirm deletion, press any other key to cancel\n", map.pk[a - 1].name);
+    int flag;
+    scanf("%d", &flag);
+    if (flag == 1) {
+        Edge *curr = map.pk[a - 1].adjList;
+        while (curr != NULL) {
+            Edge *temp = curr;
+            curr = curr->next;
+            free(temp);
+        }
+        for (int i = a - 1; i < map.v - 1; i++) {
+            map.pk[i] = map.pk[i + 1];
+        }
+        for (int i = 0; i < map.v; i++) {
+            Edge *prev = NULL;
+            Edge *curr = map.pk[i].adjList;
+            while (curr != NULL) {
+                if (curr->dest == a - 1) {
+                    if (prev == NULL) {
+                        map.pk[i].adjList = curr->next;
+                    } else {
+                        prev->next = curr->next;
+                    }
+                    free(curr);
+                    break;
+                }
+                prev = curr;
+                curr = curr->next;
+            }
+        }
+        map.v--;
+        map.e -= 1; // Adjust the edge count appropriately
+        printf("Scenic spot deleted successfully!\n");
+    }
 }
