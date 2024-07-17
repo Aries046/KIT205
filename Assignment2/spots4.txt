@@ -1,0 +1,14 @@
+6 7
+Strahan,Historic fishing village on the west coast.
+Lake St Clair,Deepest freshwater lake in Australia.
+Stanley,Small town known for the Nut, an ancient volcanic plug.
+Hastings Caves,Large cave system with thermal springs.
+Derwent Valley,Known for its fertile lands and historic towns.
+Oatlands,Historic town with many sandstone buildings.
+1 2 400
+2 3 350
+3 4 300
+4 5 250
+5 6 200
+6 1 150
+2 4 100

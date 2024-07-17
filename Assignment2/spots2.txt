@@ -1,0 +1,9 @@
+4 4
+Freycinet,Known for its wineglass bay.
+Port Arthur,Historic site and former convict settlement.
+Bay of Fires,Beautiful white beaches.
+Richmond,Historic village with a famous bridge.
+1 2 150
+2 3 100
+3 4 200
+4 1 250

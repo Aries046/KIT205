@@ -1,0 +1,16 @@
+7 8
+Bicheno,Coastal town known for its wildlife.
+Bridestowe Lavender Estate,World's largest lavender farm.
+Devonport,Major port city in northern Tasmania.
+George Town,One of the oldest European settlements in Australia.
+Mole Creek,Known for its caves and wildlife park.
+Queenstown,Historic mining town.
+St Helens,Largest town on the northeast coast of Tasmania.
+1 2 120
+2 3 140
+3 4 160
+4 5 180
+5 6 200
+6 7 220
+1 7 300
+3 6 250
