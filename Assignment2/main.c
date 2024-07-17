@@ -98,6 +98,32 @@ void menu2() {
         }
     }
 }
+void introduce() {
+    createspot();
+    if (map.v == 0) {
+        printf("There are currently no scenic spots on this map!\n");
+        return;
+    }
+    Listspot();
+    printf("\nPlease enter the code of the scenic spot you want to view: \n");
+    int n;
+    while (1) {
+        scanf("%d", &n);
+        if (n < 1 || n > map.v) {
+            printf("Invalid input, please re-enter! \n");
+        } else {
+            break;
+        }
+    }
+    printf("%s: %s\n", map.pk[n - 1].name, map.pk[n - 1].features);
+    printf("\nTo query again, press 1, to exit the query, press any other key\n");
+    char flag;
+    scanf(" %c", &flag);
+    if (flag == '1') {
+        introduce();
+    }
+}
+
 
 
 void menu2() {
