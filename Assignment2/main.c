@@ -255,3 +255,98 @@ void deletespot() {
         printf("Scenic spot deleted successfully!\n");
     }
 }
+void addpath() {
+    createspot();
+    Listspot();
+    if (map.v <= 0 || map.v == 1) {
+        printf("Due to no scenic spots or too few scenic spots, roads cannot be added to this map!\n");
+        return;
+    }
+    printf("Please enter the codes of the two scenic spots you want to connect (enter numbers between 1 and %d):\n", map.v);
+    int a, b;
+    scanf("%d %d", &a, &b);
+    while (a < 1 || a > map.v || b < 1 || b > map.v) {
+        if (a == b)
+            printf("The codes of the scenic spots you entered are the same, please re-enter!\n");
+        else
+            printf("Invalid input, please enter numbers between 1 and %d separated by a space, and re-enter!\n", map.v);
+        scanf("%d %d", &a, &b);
+    }
+    int d;
+    printf("Please enter the length of the road between \"%s\" and \"%s\":\n", map.pk[a - 1].name, map.pk[b - 1].name);
+    scanf("%d", &d);
+    while (d < 0 || d >= BIG) {
+        printf("Invalid length, please re-enter!\n");
+        scanf("%d", &d);
+    }
+    Edge *newEdge = (Edge *)malloc(sizeof(Edge));
+    newEdge->dest = b - 1;
+    newEdge->weight = d;
+    newEdge->next = map.pk[a - 1].adjList;
+    map.pk[a - 1].adjList = newEdge;
+
+    Edge *reverseEdge = (Edge *)malloc(sizeof(Edge));
+    reverseEdge->dest = a - 1;
+    reverseEdge->weight = d;
+    reverseEdge->next = map.pk[b - 1].adjList;
+    map.pk[b - 1].adjList = reverseEdge;
+
+    map.e++;
+    printf("Congratulations, the road has been successfully added!\n");
+}
+
+void deletepath() {
+    createspot();
+    Listspot();
+    if (map.v <= 0) {
+        printf("There are no scenic spots on the map, unable to delete roads!\n");
+        return;
+    }
+    if (map.e <= 0) {
+        printf("There are no roads on the map, unable to delete!\n");
+        return;
+    }
+    printf("Please enter the codes of the two scenic spots corresponding to the road you want to delete, separated by a space:\n");
+    int a, b;
+    scanf("%d %d", &a, &b);
+    while (a < 1 || a > map.v || b < 1 || b > map.v || a == b) {
+        if (a == b)
+            printf("The codes of the scenic spots you entered are the same, please re-enter!\n");
+        else
+            printf("Invalid input, please re-enter! Range is 1 to %d.\n", map.v);
+        scanf("%d %d", &a, &b);
+    }
+    Edge *prev = NULL;
+    Edge *curr = map.pk[a - 1].adjList;
+    while (curr != NULL && curr->dest != b - 1) {
+        prev = curr;
+        curr = curr->next;
+    }
+    if (curr == NULL) {
+        printf("There is no road between \"%s\" and \"%s\", unable to delete!\n", map.pk[a - 1].name, map.pk[b - 1].name);
+    } else {
+        if (prev == NULL) {
+            map.pk[a - 1].adjList = curr->next;
+        } else {
+            prev->next = curr->next;
+        }
+        free(curr);
+
+        prev = NULL;
+        curr = map.pk[b - 1].adjList;
+        while (curr != NULL && curr->dest != a - 1) {
+            prev = curr;
+            curr = curr->next;
+        }
+        if (prev == NULL) {
+            map.pk[b - 1].adjList = curr->next;
+        } else {
+            prev->next = curr->next;
+        }
+        free(curr);
+
+        map.e--;
+        printf("Road deleted successfully!\n");
+    }
+}
+
