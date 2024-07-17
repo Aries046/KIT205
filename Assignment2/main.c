@@ -60,8 +60,45 @@ int main() {
 }
 
 void menu1() {
-    // Placeholder for admin menu
+    while (1) {
+        int m;
+        printf("\t\tAdmin Operations Interface\n");
+        printf("\tHello, welcome! How can I help you?\n");
+        printf("\t<1> View scenic spot introduction\n");
+        printf("\t<2> Modify scenic spot information\n");
+        printf("\t<3> Add scenic spot information\n");
+        printf("\t<4> Delete scenic spot information\n");
+        printf("\t<5> Add scenic spot path\n");
+        printf("\t<6> Delete scenic spot path\n");
+        printf("\t<7> Shortest path to a scenic spot\n");
+        printf("\t<8> Shortest path between two scenic spots\n");
+        printf("\t<9> Change login password\n");
+        printf("\t<10> Exit admin system\n");
+        scanf("%d", &m);
+        switch (m) {
+            // Placeholder for menu options
+            default: printf("Invalid input, please enter a number between 1 and 10!\n"); break;
+        }
+    }
 }
+
+void menu2() {
+    while (1) {
+        int a;
+        printf("\t\tTourist Operations Interface\n");
+        printf("\tHello, welcome! How can I help you?\n");
+        printf("\t<1> View scenic spot introduction\n");
+        printf("\t<2> Shortest path to a scenic spot\n");
+        printf("\t<3> Shortest path between two scenic spots\n");
+        printf("\t<4> Exit system\n");
+        scanf("%d", &a);
+        switch (a) {
+            // Placeholder for menu options
+            default: printf("Invalid input\n"); break;
+        }
+    }
+}
+
 
 void menu2() {
     // Placeholder for tourist menu
