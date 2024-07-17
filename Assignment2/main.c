@@ -5,7 +5,7 @@
 // Definitions
 #define BIG 100000
 #define MAX_PEAKS 50
-#define TESTFILE "spots.txt"
+#define TESTFILE "spots1.txt"
 
 typedef struct Edge {
     int dest;
@@ -27,6 +27,23 @@ typedef struct {
 } Graph;
 
 static Graph map;
+
+void menu1();
+void menu2();
+void introduce();
+void changes();
+void addspot();
+void deletespot();
+void addpath();
+void deletepath();
+void Dijkstra();
+void Floyed();
+void changecode();
+void Listspot();
+void createspot();
+void Exit();
+void addEdge(int src, int dest, int weight);
+
 char PASSCODE[20] = "bao";
 int main() {
     int n;
@@ -59,6 +76,7 @@ int main() {
     return 0;
 }
 
+
 void menu1() {
     while (1) {
         int m;
@@ -76,7 +94,16 @@ void menu1() {
         printf("\t<10> Exit admin system\n");
         scanf("%d", &m);
         switch (m) {
-            // Placeholder for menu options
+            case 1: introduce(); break;
+            case 2: changes(); break;
+            case 3: addspot(); break;
+            case 4: deletespot(); break;
+            case 5: addpath(); break;
+            case 6: deletepath(); break;
+            case 7: Dijkstra(); break;
+            case 8: Floyed(); break;
+            case 9: changecode(); break;
+            case 10: Exit(); break;
             default: printf("Invalid input, please enter a number between 1 and 10!\n"); break;
         }
     }
@@ -93,11 +120,16 @@ void menu2() {
         printf("\t<4> Exit system\n");
         scanf("%d", &a);
         switch (a) {
-            // Placeholder for menu options
+            case 1: introduce(); break;
+            case 2: Dijkstra(); break;
+            case 3: Floyed(); break;
+            case 4: exit(0); break;
             default: printf("Invalid input\n"); break;
         }
     }
 }
+
+
 void introduce() {
     createspot();
     if (map.v == 0) {
@@ -123,6 +155,36 @@ void introduce() {
         introduce();
     }
 }
+
+
+void changes() {
+    createspot();
+    Listspot();
+    int name;
+    char outputname[200], inputfeatures[200];
+    printf("Please enter the code of the scenic spot you want to modify (enter 0 to return to the main menu):\n");
+    scanf("%d", &name);
+    if (name == 0) return;
+    while (name < 1 || name > map.v) {
+        printf("Invalid scenic spot code, please re-enter:\n");
+        scanf("%d", &name);
+    }
+    printf("The current name of this scenic spot is:\n%s\n", map.pk[name - 1].name);
+    printf("Please enter the new name:\n");
+    scanf("%s", outputname);
+    strcpy(map.pk[name - 1].name, outputname);
+    printf("Name updated successfully\n");
+    printf("The current information of this scenic spot is:\n%s\n", map.pk[name - 1].features);
+    printf("Please enter the new description of the scenic spot:\n");
+    scanf("%s", inputfeatures);
+    strcpy(map.pk[name - 1].features, inputfeatures);
+    printf("Scenic spot description updated successfully. Enter 1 to continue modifying, or enter 2 to return to the main menu\n");
+    int p;
+    scanf("%d", &p);
+    if (p == 2) return;
+    if (p == 1) changes();
+}
+
 void addspot() {
     createspot();
     if (map.v >= MAX_PEAKS) {
@@ -178,34 +240,6 @@ void addspot() {
     printf("Scenic spot added successfully!\n");
 }
 
-void changes() {
-    createspot();
-    Listspot();
-    int name;
-    char outputname[200], inputfeatures[200];
-    printf("Please enter the code of the scenic spot you want to modify (enter 0 to return to the main menu):\n");
-    scanf("%d", &name);
-    if (name == 0) return;
-    while (name < 1 || name > map.v) {
-        printf("Invalid scenic spot code, please re-enter:\n");
-        scanf("%d", &name);
-    }
-    printf("The current name of this scenic spot is:\n%s\n", map.pk[name - 1].name);
-    printf("Please enter the new name:\n");
-    scanf("%s", outputname);
-    strcpy(map.pk[name - 1].name, outputname);
-    printf("Name updated successfully\n");
-    printf("The current information of this scenic spot is:\n%s\n", map.pk[name - 1].features);
-    printf("Please enter the new description of the scenic spot:\n");
-    scanf("%s", inputfeatures);
-    strcpy(map.pk[name - 1].features, inputfeatures);
-    printf("Scenic spot description updated successfully. Enter 1 to continue modifying, or enter 2 to return to the main menu\n");
-    int p;
-    scanf("%d", &p);
-    if (p == 2) return;
-    if (p == 1) changes();
-}
-
 void deletespot() {
     createspot();
     if (map.v < 1) {
@@ -255,6 +289,7 @@ void deletespot() {
         printf("Scenic spot deleted successfully!\n");
     }
 }
+
 void addpath() {
     createspot();
     Listspot();
@@ -349,6 +384,17 @@ void deletepath() {
         printf("Road deleted successfully!\n");
     }
 }
+
+void Exit() {
+    printf("\n[Note]:\nAfter exiting the system, all previous operations will be reset to the initial default values.\n");
+    printf("To confirm exit, press 1. Press any other key to cancel the exit operation.\n");
+    int judge;
+    scanf("%d", &judge);
+    if (judge == 1) {
+        exit(0);
+    }
+}
+
 void Dijkstra() {
     int m, i, n, k, pre;
     int D[100]; // Store shortest path lengths from the source to other vertices
