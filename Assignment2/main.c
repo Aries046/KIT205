@@ -494,3 +494,57 @@ void changecode() {
     printf("*Note* The new password will revert to the initial default password the next time you enter the program.");
 }
 
+void Listspot() {
+    if (map.v == 0) {
+        printf("There are currently no scenic spots on the map!\n\n");
+        return;
+    }
+    printf("Tasmania has the following scenic spots (Note: all data is fictional.):\n\n");
+    for (int i = 0; i < map.v; i++) {
+        printf("\t<%d>%s\n", i + 1, map.pk[i].name);
+    }
+}
+
+void createspot() {
+
+    FILE *file = fopen(TESTFILE, "r");
+    if (!file) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(file, "%d %d", &map.v, &map.e);
+
+    // Initialize the adjacency lists for each peak
+    for (int i = 0; i < map.v; i++) {
+        map.pk[i].adjList = NULL;
+    }
+
+    // Read peaks
+    for (int i = 0; i < map.v; i++) {
+        fscanf(file, "%[^,],%[^\n]\n", map.pk[i].name, map.pk[i].features);
+    }
+
+    // Read edges
+    for (int i = 0; i < map.e; i++) {
+        int src, dest, weight;
+        fscanf(file, "%d %d %d", &src, &dest, &weight);
+        addEdge(src, dest, weight);
+    }
+
+    fclose(file);
+}
+
+void addEdge(int src, int dest, int weight) {
+    Edge *newEdge = (Edge *)malloc(sizeof(Edge));
+    newEdge->dest = dest;
+    newEdge->weight = weight;
+    newEdge->next = map.pk[src].adjList;
+    map.pk[src].adjList = newEdge;
+
+    Edge *reverseEdge = (Edge *)malloc(sizeof(Edge));
+    reverseEdge->dest = src;
+    reverseEdge->weight = weight;
+    reverseEdge->next = map.pk[dest].adjList;
+    map.pk[dest].adjList = reverseEdge;
+}
