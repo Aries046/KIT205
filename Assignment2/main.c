@@ -349,4 +349,140 @@ void deletepath() {
         printf("Road deleted successfully!\n");
     }
 }
+void Dijkstra() {
+    int m, i, n, k, pre;
+    int D[100]; // Store shortest path lengths from the source to other vertices
+    int P[100]; // Store the predecessor of each vertex
+    int S[100]; // Track visited vertices
+    int min;
+
+    createspot();
+    Listspot();
+    printf("Please enter the code of your current scenic spot:\n");
+    scanf("%d", &m);
+    while (m < 1 || m > map.v) {
+        printf("Invalid input, please enter a number between 1 and %d:\n", map.v);
+        scanf("%d", &m);
+    }
+    m--; // Adjust for 0-based indexing
+
+    // Initialize arrays
+    for (i = 0; i < map.v; i++) {
+        D[i] = BIG;
+        P[i] = -1;
+        S[i] = 0;
+    }
+    D[m] = 0;
+
+    for (i = 0; i < map.v; i++) {
+        // Find the vertex with the minimum distance
+        min = BIG + 1;
+        for (n = 0; n < map.v; n++) {
+            if (S[n] == 0 && D[n] < min) {
+                k = n;
+                min = D[n];
+            }
+        }
+        S[k] = 1; // Mark the vertex as visited
+
+        // Update distances to adjacent vertices
+        Edge *edge = map.pk[k].adjList;
+        while (edge != NULL) {
+            if (S[edge->dest] == 0 && D[k] + edge->weight < D[edge->dest]) {
+                D[edge->dest] = D[k] + edge->weight;
+                P[edge->dest] = k;
+            }
+            edge = edge->next;
+        }
+    }
+
+    int judge = 1;
+    for (i = 0; i < map.v; i++) { // Output shortest paths
+        if (i != m) {
+            if (D[i] != BIG) {
+                judge = 0;
+                printf("Distance %d meters: %s", D[i], map.pk[i].name);
+                pre = P[i];
+                while (pre >= 0) {
+                    printf(" <- %s", map.pk[pre].name);
+                    pre = P[pre];
+                }
+                printf("\n");
+            }
+        }
+    }
+    if (judge)
+        printf("The scenic spot [%s] has no accessible roads to any other scenic spots, therefore the shortest path cannot be found!\n", map.pk[m].name);
+    system("pause");
+}
+
+void Floyed() {
+    int m, n, i, j, k;
+    int D[100][100]; // Store shortest path distances between all pairs of vertices
+    int P[100][100]; // Store the predecessor of each vertex
+
+    createspot();
+    Listspot();
+    printf("Please enter the codes of the two scenic spots you want to query the distance between, separated by a space:\n");
+    scanf("%d %d", &m, &n);
+    while (m < 1 || m > map.v || n < 1 || n > map.v) {
+        printf("Invalid input, please re-enter! Range is 1 to %d.\n", map.v);
+        scanf("%d %d", &m, &n);
+    }
+    m--; // Adjust for 0-based indexing
+    n--; // Adjust for 0-based indexing
+
+    // Initialize distances and predecessors
+    for (i = 0; i < map.v; i++) {
+        for (j = 0; j < map.v; j++) {
+            if (i == j) {
+                D[i][j] = 0;
+                P[i][j] = -1;
+            } else {
+                D[i][j] = BIG;
+                P[i][j] = -1;
+            }
+        }
+    }
+
+    // Populate initial distances from adjacency list
+    for (i = 0; i < map.v; i++) {
+        Edge *edge = map.pk[i].adjList;
+        while (edge != NULL) {
+            D[i][edge->dest] = edge->weight;
+            P[i][edge->dest] = i;
+            edge = edge->next;
+        }
+    }
+
+    // Floyd-Warshall algorithm
+    for (k = 0; k < map.v; k++) {
+        for (i = 0; i < map.v; i++) {
+            for (j = 0; j < map.v; j++) {
+                if (D[i][k] != BIG && D[k][j] != BIG && D[i][k] + D[k][j] < D[i][j]) {
+                    D[i][j] = D[i][k] + D[k][j];
+                    P[i][j] = P[k][j];
+                }
+            }
+        }
+    }
+
+    // Output the results
+    if (D[m][n] == BIG) {
+        printf("There is no accessible road between \"%s\" and \"%s\"!\n", map.pk[m].name, map.pk[n].name);
+    } else {
+        printf("The shortest distance between \"%s\" and \"%s\" is %d meters.\n", map.pk[m].name, map.pk[n].name, D[m][n]);
+        printf("The shortest path is: %s", map.pk[m].name);
+        k = n;
+        while (P[m][k] != -1) {
+            printf(" -> %s", map.pk[P[m][k]].name);
+            k = P[m][k];
+        }
+        printf(" -> %s\n", map.pk[n].name);
+    }
+
+    printf("\n");
+    system("pause");
+}
+
 
